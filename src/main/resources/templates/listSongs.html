@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Songs Homepage - Welcome to My Music Store</title>
+    <style type="text/css">
+        .songs {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            width: 100%;
+        }
+
+        .song-info {
+            margin-bottom: 10px;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            text-decoration: none;
+            padding: 5px 15px;
+            color: white;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .button.delete {
+            background-color: rgba(220, 62, 62, 0.85);
+        }
+
+        .button.edit {
+            background-color: rgba(0, 140, 255, 0.87);
+        }
+
+        .button.add {
+            background-color: rgba(0, 100, 0, 0.68);
+        }
+
+        .error {
+            color: white;
+            background-color: #ff4d4d;
+            border: 1px solid #cc0000;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to My Music Store</h1>
+</header>
+<main>
+    <th:block th:if="${hasError}">
+        <div th:text="${error}" class="error"></div>
+    </th:block>
+
+    <h2>Choose a song:</h2>
+    <form class="songs" method="POST" action="songs">
+        <div th:each="song : ${songs}" class="songs">
+            <div class="song-info">
+                <input type="radio" name="songId" th:value="${song.id}"
+                       th:utext="'Title: ' + ${song.title} + ', Genre: ' + ${song.genre} + ', Release Year: ' + ${song.releaseYear} + ', Rating: ' + ${song.getAverage()} + ', Album: ' + ${song.getAlbum().name}">
+                <input type="number" th:name="songRating + ${song.id}" value="0" min="0" max="5"
+                       style="margin-left: 10px;">
+            </div>
+
+            <div class="song-actions">
+                <a th:href="@{'/songs/delete/{id}' (id=${song.getId()})}" class="button delete">Delete</a>
+                <a th:href="@{'/songs/edit-form/{id}' (id=${song.getId()})}" class="button edit">Edit</a>
+            </div>
+        </div>
+        <input type='submit' value='Submit'>
+    </form>
+    <a href="/songs/add-form" class="button add">
+        Add new song
+    </a>
+
+</main>
+</body>
+</html>
